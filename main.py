@@ -1,0 +1,77 @@
+
+
+from flask import Flask, render_template, request
+
+
+app = Flask(__name__)
+
+
+@app.route('/')
+def inicio():
+    return render_template('inicio.html')
+
+
+
+@app.route('/ejercicio1', methods=['GET', 'POST'])
+def ejercicio1():
+    promedio = None
+    estado = None
+
+    if request.method == 'POST':
+        nota1 = float(request.form['nota1'])
+        nota2 = float(request.form['nota2'])
+        nota3 = float(request.form['nota3'])
+        asistencia = float(request.form['asistencia'])
+
+        promedio_real = (nota1 + nota2 + nota3) / 3
+
+        if promedio_real >= 40 and asistencia >= 75:
+            estado = "APROBADO"
+        else:
+            estado = "REPROBADO"
+
+        promedio = round(promedio_real, 2)
+
+    return render_template('ejercicio1.html', promedio=promedio, estado=estado)
+
+
+
+
+@app.route('/ejercicio2', methods=['GET', 'POST'])
+def ejercicio2():
+    nombre_largo = None
+    cantidad = None
+    mensaje = None
+    nombre1 = ""
+    nombre2 = ""
+    nombre3 = ""
+
+    if request.method == 'POST':
+        nombre1 = request.form['nombre1']
+        nombre2 = request.form['nombre2']
+        nombre3 = request.form['nombre3']
+
+        if nombre1 == nombre2 or nombre1 == nombre3 or nombre2 == nombre3:
+            mensaje = "Debes ingresar tres nombres diferentes."
+        else:
+            if len(nombre1) >= len(nombre2) and len(nombre1) >= len(nombre3):
+                nombre_largo = nombre1
+            elif len(nombre2) >= len(nombre1) and len(nombre2) >= len(nombre3):
+                nombre_largo = nombre2
+            else:
+                nombre_largo = nombre3
+
+            cantidad = len(nombre_largo)
+
+    return render_template('ejercicio2.html',
+                           nombre_largo=nombre_largo,
+                           cantidad=cantidad,
+                           mensaje=mensaje,
+                           nombre1=nombre1,
+                           nombre2=nombre2,
+                           nombre3=nombre3)
+
+
+
+if __name__ == '__main__':
+    app.run()
